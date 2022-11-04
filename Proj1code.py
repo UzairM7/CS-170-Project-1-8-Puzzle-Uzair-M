@@ -64,19 +64,19 @@ def print_puzzle(puzzle):
     print('\n')
 
 def select_and_init_algorithm(puzzle):
-    algorithm = input("Select algorithm. (1) for Uniform Cost Search, (2) for the Misplaced Tile Heuristic, "
-                      "or (3) the Manhattan Distance Heuristic." + '\n')
+    algorithm = input("Select algorithm. (1) for Uniform Cost Search, (2) for the Misplaced Tile Heuristic, or (3) the Manhattan Distance Heuristic." + '\n')
     if algorithm == "1":
         uniform_cost_search(puzzle, 0)
     
     if algorithm == "2":
-        uniform_cost_search(puzzle, 1)
+        misplaced_tile_heuristic(puzzle, 1)
 
 
 
 class Node:
     
-    def init
+    def __init__(self) -> None:
+        pass
     
 
 def uniform_cost_search(puzzle, heuristic):
@@ -104,6 +104,14 @@ def uniform_cost_search(puzzle, heuristic):
             return node_From_queue
 
         stack_to_print.append(node_From_queue.board)
+
+
+
+def misplaced_tile_heuristic(puzzle, heuristic)
+
+
+
+def manhattan_distance_heuristic(puzzle, heuristic)
     
 
 
