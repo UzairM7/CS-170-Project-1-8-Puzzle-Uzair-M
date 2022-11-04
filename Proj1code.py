@@ -1,4 +1,7 @@
-import heapq as min_heap_esque_queue # because it sort of acts like min heap
+import queue
+import copy
+import heapq as min_heap_esque_queue
+
 
 # Below are some built-in puzzles to allow quick testing.
 
@@ -36,7 +39,7 @@ def main():
         for i in range(0, 3):
             puzzle_row_one[i] = int(puzzle_row_one[i])
             puzzle_row_two[i] = int(puzzle_row_two[i])
-            puzzle_row_three[i] = int(puzzle_row_hree[i])
+            puzzle_row_three[i] = int(puzzle_row_three[i])
 
         user_puzzle = [puzzle_row_one, puzzle_row_two, puzzle_row_three]
         select_and_init_algorithm(user_puzzle)
@@ -71,17 +74,38 @@ def select_and_init_algorithm(puzzle):
     if algorithm == "2":
         misplaced_tile_heuristic(puzzle, 1)
 
+    if algorithm == "3":
+        manhattan_distance_heuristic(puzzle, 2)
+
 
 
 class Node:
     
-    def __init__(self) -> None:
-        pass
+    def __init__(self, puzzle):
+        self.puzzle = puzzle
+    def fn(self, fn):
+        self.fn = fn
+    def gn(self, gn):
+        self.gn = gn
+    def hn(self, hn):
+        self.hn = hn
+    def board_to_tuple(self):
+        tuples = tuple(tuple(x) for x in self.puzzle)
+        return tuples
+    def solved(self):
+        return self.puzzle == eight_goal_state
+    def board(self):
+        return self.puzzle
+        
+        
+        
+    
+    
     
 
 def uniform_cost_search(puzzle, heuristic):
 
-    starting_node = TreeNode.TreeNode(None, puzzle, 0, 0)
+    starting_node = (None, puzzle, 0, 0)
     working_queue = []
     repeated_states = dict()
     min_heap_esque_queue.heappush(working_queue, starting_node)
@@ -94,24 +118,27 @@ def uniform_cost_search(puzzle, heuristic):
     while len(working_queue) > 0:
         max_queue_size = max(len(working_queue), max_queue_size)
         # the node from the queue being considered/checked
-        node_From_queue = min_heap_esque_queue.heappop(working_queue)
+        node_from_queue = min_heap_esque_queue.heappop(working_queue)
         repeated_states[node_from_queue.board_to_tuple()] = "This can be anything"
         if node_from_queue.solved(): # check if the current state of the board is the solution
             while len(stack_to_print) > 0: # the stack of nodes for the traceback
                 print_puzzle(stack_to_print.pop())
             print("Number of nodes expanded:", num_nodes_Expanded)
             print("Max queue size:", max_queue_size)
-            return node_From_queue
+            return node_from_queue
 
-        stack_to_print.append(node_From_queue.board)
-
-
-
-def misplaced_tile_heuristic(puzzle, heuristic)
+        stack_to_print.append(node_from_queue.board())
 
 
 
-def manhattan_distance_heuristic(puzzle, heuristic)
+#def misplaced_tile_heuristic(puzzle, heuristic)
+
+
+
+#def manhattan_distance_heuristic(puzzle, heuristic)
+
+
+#Which ways 0 can be moved around legally throughout the puzzle
+
+def expanding():
     
-
-
