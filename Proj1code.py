@@ -1,17 +1,17 @@
 import queue
 import copy
 
-easy = [[1, 2, 0],
-        [4, 5, 3],
-        [7, 8, 6]]
+easy = [[1, 2, 3],
+        [4, 0, 6],
+        [7, 5, 8]]
 
 medium = [[1, 0, 2],
           [4, 5, 3],
           [7, 8, 6]]
 
-hard = [[8, 7, 1],
-        [6, 0, 2],
-        [5, 4, 3]]
+hard = [[1, 6, 7],
+        [5, 0, 3],
+        [4, 8, 2]]
 
 eight_goal_state = [[1, 2, 3],
                     [4, 5, 6],
@@ -76,7 +76,7 @@ def select_and_init_algorithm(puzzle):
 
 class Node:
     
-    def __lt__(self, compare): return self.fn < compare.get_fn()
+    def __lt__(self, compare): return self.fn + self.gn < compare.get_fn() + compare.get_gn()
 
     def __init__(self, puzzle):
         self.puzzle = puzzle
@@ -162,7 +162,7 @@ class Node:
             N.set_hn(0)
             N.set_fn(self.gn + 1)
         
-            if N not in repeat_set:
+            if N.board_to_tuple() not in repeat_set:
                 m.append(N)
 
         
@@ -176,7 +176,7 @@ class Node:
             N.set_hn(0)
             N.set_fn(self.gn + 1)
             
-            if N not in repeat_set:
+            if N.board_to_tuple() not in repeat_set:
                 m.append(N)
 
         return m
@@ -210,6 +210,7 @@ def uniform_cost_search(puzzle, heuristic):
                 print_puzzle(stack_to_print.pop())
             print("Number of nodes expanded:", num_nodes_expanded)
             print("Max queue size:", max_queue_size)
+            print("Depth: " + str(node_from_queue.get_gn()))
             return node_from_queue
         print_puzzle(node_from_queue.board())
         stack_to_print.append(node_from_queue.board())
@@ -217,7 +218,7 @@ def uniform_cost_search(puzzle, heuristic):
         num_nodes_expanded+=1
 
         for node in expandedNodes:
-            repeat_set.add(node)
+            repeat_set.add(node.board_to_tuple())
             pq.put(node)
 
 def misplaced_tile_heuristic(puzzle, heuristic):
@@ -246,6 +247,7 @@ def misplaced_tile_heuristic(puzzle, heuristic):
                 print_puzzle(stack_to_print.pop())
             print("Number of nodes expanded:", num_nodes_expanded)
             print("Max queue size:", max_queue_size)
+            print("Depth: " + str(node_from_queue.get_gn()))
             return node_from_queue
         print_puzzle(node_from_queue.board())
         stack_to_print.append(node_from_queue.board())
@@ -253,7 +255,7 @@ def misplaced_tile_heuristic(puzzle, heuristic):
         num_nodes_expanded+=1
 
         for node in expandedNodes:
-            repeat_set.add(node)
+            repeat_set.add(node.board_to_tuple())
             cost = 0
             for i in range(3):
                 for j in range(3):
@@ -289,6 +291,7 @@ def manhattan_distance_heuristic(puzzle, heuristic):
                 print_puzzle(stack_to_print.pop())
             print("Number of nodes expanded:", num_nodes_expanded)
             print("Max queue size:", max_queue_size)
+            print("Depth: " + str(node_from_queue.get_gn()))
             return node_from_queue
         print_puzzle(node_from_queue.board())
         stack_to_print.append(node_from_queue.board())
@@ -299,11 +302,13 @@ def manhattan_distance_heuristic(puzzle, heuristic):
 
         y_coords = [0, 0, 0, 1, 1, 1, 2, 2, 2]
         for node in expandedNodes:
-            repeat_set.add(node)
+            repeat_set.add(node.board_to_tuple())
             cost = 0
             for i in range(3):
                 for j in range(3):
-                    if node.board()[i][j] != eight_goal_state[i][j]:
+                    if node.board()[i][j] == 0:
+                        continue
+                    elif node.board()[i][j] != eight_goal_state[i][j]:
                         cost += abs(i - x_coords[i]) + abs(j + y_coords[j])
                     
             node.set_hn(cost)
